@@ -23,9 +23,9 @@
         <button sl-on="toggle">Toggle</button>
 
         <div class='box'>This is after the div. Here's what you entered: {{ inputValue }}</div>
-        
 
-        <input type='test' sl-model='inputValue'>
+        <input sl-bind.type="inputType" sl-model='inputValue'>
+        <button sl-on="toggleInputType">Toggle Input Type</button>
     </div>
 
     <script src="simpleton.js"></script>
@@ -37,9 +37,13 @@
                 currentFeeling: "OK",
                 isActive: true,
                 inputValue: "",
+                inputType: "text",
                 toggle: ( model ) => {
                     model.isActive = !model.isActive;
                     model.name = "bob";
+                },
+                toggleInputType: ( model ) => {
+                    model.inputType = model.inputType === "text" ? "password" : "text";
                 }
             }
             

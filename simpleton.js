@@ -24,6 +24,7 @@ function Element( domElement ) {
     this.domElement = domElement;
     this.children = [];
     this.conditionalClasses = [];
+    this.conditionalAttributes = [];
 
     this.create = ( model ) => {
         var nodesList = this.domElement.childNodes;
@@ -74,11 +75,19 @@ function Element( domElement ) {
                     break;
                 case "on":
                     this.domElement.addEventListener( "click", 
+                        // Call the specified function and pass a model object as a param
                         () => model.data[attribute.value]( model.data )  );
                     break;
                 case "model":
                     this.domElement.addEventListener( "input", 
                         () => model.data[attribute.value] = this.domElement.value );
+                    break;
+                case "bind":
+                    this.conditionalAttributes.push( {
+                        attrName: matchResult[2],
+                        condition: attribute.value
+                    } );
+                    break;
             }
 
             // Remove the evaluated attribute
@@ -95,6 +104,7 @@ function Element( domElement ) {
         }
 
         this.updateClasses( model, changedValue );
+        this.updateAttributes( model, changedValue );
     }
 
     this.updateClasses = ( model, changedValue ) => {
@@ -108,6 +118,22 @@ function Element( domElement ) {
             else {
                 this.domElement.classList.remove( className );
             }
+        }
+    }
+
+    this.updateAttributes = ( model, changedValue ) => {
+        console.log( this.conditionalAttributes );
+        for ( let i = 0; i < this.conditionalAttributes.length; i++ ) {
+            // Update only the changed attributes
+            if ( changedValue !== this.conditionalAttributes[i].condition ) continue;
+
+            let attribute = this.conditionalAttributes[i];
+            
+            // Set the attribute and set it's value equal to the 
+            // corresponding variable value in model.data
+            this.domElement.setAttribute( 
+                attribute.attrName, 
+                model.data[attribute.condition] );
         }
     }
 }
@@ -140,7 +166,6 @@ function TextNode( node ) {
     }
 
     this.update = ( model, changedValue ) => {
-        console.log( this.usedValues );
         if ( this.usedValues.indexOf( changedValue ) === -1 ) return;
         this.create( model );
     }
