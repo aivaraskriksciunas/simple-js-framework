@@ -57,14 +57,16 @@ function Element( domElement ) {
     this.readAttributes = ( model ) => {
         // Read attributes
         let attributesList = this.domElement.attributes;
-        const regexp = /sl-(\w+)(?:\.(\w+))?/g;
+        const regexp = /sl-(\w+)(?:\.(\w+))?/;
 
-        for ( let index = 0; index < attributesList.length; index++ ) {
+        // We start checking attributes from the end, so that we can easily 
+        // Remove any attribute without causing any headaches
+        for ( let index = attributesList.length - 1; index >= 0; index-- ) {
             let attribute = attributesList[index];
 
             let matchResult = regexp.exec( attribute.name );
             if ( matchResult === null ) continue;
-            
+
             switch( matchResult[1] ) {
                 case "class":
                     // Append this class to conditional classes list
@@ -122,7 +124,6 @@ function Element( domElement ) {
     }
 
     this.updateAttributes = ( model, changedValue ) => {
-        console.log( this.conditionalAttributes );
         for ( let i = 0; i < this.conditionalAttributes.length; i++ ) {
             // Update only the changed attributes
             if ( changedValue !== this.conditionalAttributes[i].condition ) continue;
