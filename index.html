@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>Framework Test</title>
+    <style>
+        .box {
+            padding: 10px 8px;
+            background-color: rgb( 230, 230, 255 );
+        }
+        .active {
+            background-color: rgb( 180, 180, 255 );
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id='app'>
+        hello, this is {{name}}, I'm feeling {{ currentFeeling }}
+        <div fw-class.active="isActive" class='box'>
+            Test div, {{name}}
+        </div>
+
+        <button fw-on="toggle">Toggle</button>
+
+        <div class='box'>This is after the div. Here's what you entered: {{ inputValue }}</div>
+        
+
+        <input type='test' fw-model='inputValue'>
+    </div>
+
+    <script src="framework.js"></script>
+    <script>
+        Framework( {
+            el: '#app',
+            data: {
+                name: "steve",
+                currentFeeling: "OK",
+                isActive: true,
+                inputValue: "",
+                toggle: ( model ) => {
+                    model.isActive = !model.isActive;
+                    model.name = "bob";
+                }
+            }
+            
+        } )
+    </script>
+</body>
+</html>
