@@ -1,7 +1,7 @@
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
 
-const Framework = ( model ) => {
+const Simpleton = ( model ) => {
     // Create an object for the root element
     var rootElement = new Element( document.querySelector( model.el ) );
 
@@ -56,7 +56,7 @@ function Element( domElement ) {
     this.readAttributes = ( model ) => {
         // Read attributes
         let attributesList = this.domElement.attributes;
-        const regexp = /fw-(\w+)(?:\.(\w+))?/g;
+        const regexp = /sl-(\w+)(?:\.(\w+))?/g;
 
         for ( let index = 0; index < attributesList.length; index++ ) {
             let attribute = attributesList[index];

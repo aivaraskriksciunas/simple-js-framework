@@ -16,21 +16,21 @@
     
     <div id='app'>
         hello, this is {{name}}, I'm feeling {{ currentFeeling }}
-        <div fw-class.active="isActive" class='box'>
+        <div sl-class.active="isActive" class='box'>
             Test div, {{name}}
         </div>
 
-        <button fw-on="toggle">Toggle</button>
+        <button sl-on="toggle">Toggle</button>
 
         <div class='box'>This is after the div. Here's what you entered: {{ inputValue }}</div>
         
 
-        <input type='test' fw-model='inputValue'>
+        <input type='test' sl-model='inputValue'>
     </div>
 
-    <script src="framework.js"></script>
+    <script src="simpleton.js"></script>
     <script>
-        Framework( {
+        Simpleton( {
             el: '#app',
             data: {
                 name: "steve",
