@@ -12,7 +12,7 @@ const Simpleton = ( model ) => {
         set: ( target, name, value ) => {
             target[name] = value;
 
-            rootElement.update( model, name );
+            rootElement.update( model, name, null, null );
         }
     }
 
@@ -85,6 +85,8 @@ function Element( domElement ) {
                 case "model":
                     this.domElement.addEventListener( "input", 
                         () => model.data[attribute.value] = this.domElement.value );
+                    // Also set current elemnt value
+                    this.domElement.value = model.data[attribute.value];
                     break;
                 case "bind":
                     this.conditionalAttributes.push( {
@@ -105,11 +107,15 @@ function Element( domElement ) {
     }
 
     // Updates every child element
-    this.update = ( model, changedValue, parent ) => {
-        if ( !this.testCondition( model, parent ) ) return;
+    this.update = ( model, changedValue, parent, nextElement ) => {
+        if ( !this.testCondition( model, parent, nextElement ) ) return;
 
         for ( let i = 0; i < this.children.length; i++ ) {
-            this.children[i].update( model, changedValue, this.domElement );
+            // Get the next element in the dom
+            let nextElement = i === this.children.length - 1 ? 
+                null : this.children[(i+1)].domElement;
+
+            this.children[i].update( model, changedValue, this.domElement, nextElement );
         }
 
         this.updateClasses( model, changedValue );
@@ -145,7 +151,7 @@ function Element( domElement ) {
         }
     }
 
-    this.testCondition = ( model, parent ) => {
+    this.testCondition = ( model, parent, nextElement ) => {
         for ( var cond = 0; cond < this.elementConditions.length; cond++ ) {
             if ( model.data[this.elementConditions[cond]] === false ) {
                 // Use a try catch in case the child doesn't exist
@@ -160,7 +166,13 @@ function Element( domElement ) {
         // Append current element to the parent
         if ( this.elementConditions.length > 0 ) {
             if ( parent === undefined ) parent = document;
-            parent.appendChild( this.domElement );
+            if ( nextElement !== null ) {
+                console.log( nextElement );
+                parent.insertBefore( this.domElement, nextElement );
+            }
+            else {
+                parent.appendChild( this.domElement );
+            }
         }
 
         return true;

@@ -23,11 +23,11 @@
         <button sl-on="toggle">Toggle</button>
 
         <div class='box'>This is after the div. Here's what you entered: {{ inputValue }}</div>
+        <div class='box' sl-if="isActive">Testing if</div>
 
         <input sl-bind.type="inputType" sl-model='inputValue'>
-        <button sl-on="toggleInputType">Toggle Input Type</button>
+        <button sl-on="toggleInputType" sl-if="isActive">Toggle Input Type</button>
 
-        <div class='box' sl-if="isActive">Testing if</div>
     </div>
 
     <script src="simpleton.js"></script>
