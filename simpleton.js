@@ -25,6 +25,8 @@ function Element( domElement ) {
     this.children = [];
     this.conditionalClasses = [];
     this.conditionalAttributes = [];
+    // Stores all values specified by the sl-if attribute
+    this.elementConditions = [];
 
     this.create = ( model ) => {
         var nodesList = this.domElement.childNodes;
@@ -90,6 +92,9 @@ function Element( domElement ) {
                         condition: attribute.value
                     } );
                     break;
+                case "if":
+                    this.elementConditions.push( attribute.value );
+                    break;
             }
 
             // Remove the evaluated attribute
@@ -100,9 +105,11 @@ function Element( domElement ) {
     }
 
     // Updates every child element
-    this.update = ( model, changedValue ) => {
+    this.update = ( model, changedValue, parent ) => {
+        if ( !this.testCondition( model, parent ) ) return;
+
         for ( let i = 0; i < this.children.length; i++ ) {
-            this.children[i].update( model, changedValue );
+            this.children[i].update( model, changedValue, this.domElement );
         }
 
         this.updateClasses( model, changedValue );
@@ -136,6 +143,27 @@ function Element( domElement ) {
                 attribute.attrName, 
                 model.data[attribute.condition] );
         }
+    }
+
+    this.testCondition = ( model, parent ) => {
+        for ( var cond = 0; cond < this.elementConditions.length; cond++ ) {
+            if ( model.data[this.elementConditions[cond]] === false ) {
+                // Use a try catch in case the child doesn't exist
+                try {
+                    parent.removeChild( this.domElement );
+                }
+                catch( e ) {}
+                return false;
+            }
+        }
+        
+        // Append current element to the parent
+        if ( this.elementConditions.length > 0 ) {
+            if ( parent === undefined ) parent = document;
+            parent.appendChild( this.domElement );
+        }
+
+        return true;
     }
 }
 

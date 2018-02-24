@@ -6,6 +6,8 @@ All the code is stored in `simpleton.js`. `index.html` is for testing. Currently
 Some of the supported featuress are:
 - interpolation
 - class binding
+- conditional attributes
+- attribute binding
 - click events
 - two-way data binding
 
@@ -29,6 +31,16 @@ Interpolation works by using double curly braces: `{{yourVariable}}`
 Class binding: 
 ```
 <div sl-class.className="booleanVariable"></div>
+```
+
+Conditional attributes
+```
+<div sl-if="boolean"></div>
+```
+
+Attribute binding:
+```
+<input sl-bind.type="variable">
 ```
 
 Click binding:
